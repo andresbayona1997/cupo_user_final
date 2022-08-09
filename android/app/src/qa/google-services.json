@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "298227386218",
+    "firebase_url": "https://test-id-qa.firebaseio.com",
+    "project_id": "test-id-qa",
+    "storage_bucket": "test-id-qa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:298227386218:android:d98a8f4b47576a2f3a8713",
+        "android_client_info": {
+          "package_name": "com.example.promociones"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "298227386218-ufifag76f0s1hj058mntm4f6o1dnc4ae.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLWVRtZPvFYPDYSvMfxJz5oWD8iODPKzM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "298227386218-ufifag76f0s1hj058mntm4f6o1dnc4ae.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

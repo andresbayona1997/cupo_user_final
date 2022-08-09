@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "60948361193",
+    "firebase_url": "https://activaciones.firebaseio.com",
+    "project_id": "activaciones",
+    "storage_bucket": "activaciones.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:60948361193:android:7dca8f07e9cbdca5",
+        "android_client_info": {
+          "package_name": "com.example.promociones"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "60948361193-uuss2f9orm2g7trf1p0p8t5n3945fhip.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBq1rwBZ8Jzi9OSZlhGz75gU2ppTJ0YfKU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "60948361193-uuss2f9orm2g7trf1p0p8t5n3945fhip.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:60948361193:android:f56a6a1b5c1d98dc",
+        "android_client_info": {
+          "package_name": "com.promociones.promociones"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "60948361193-uuss2f9orm2g7trf1p0p8t5n3945fhip.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBq1rwBZ8Jzi9OSZlhGz75gU2ppTJ0YfKU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "60948361193-uuss2f9orm2g7trf1p0p8t5n3945fhip.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

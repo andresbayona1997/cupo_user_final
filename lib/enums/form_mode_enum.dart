@@ -1,0 +1,1 @@
+enum FormModeEnum { LOGIN, SIGNUP }
