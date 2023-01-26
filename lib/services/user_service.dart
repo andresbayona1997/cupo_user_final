@@ -43,6 +43,18 @@ class UserService {
     //     .then(_handleRequest);
   }
 
+  Future recoverPassword(String email) async{
+    Map user = {
+      "email": email
+    };
+    final response = await dio.post('/restore/password', options: DIO.Options(
+      headers: {'Content-type': 'application/json'},
+    ), data: user).onError((error, stackTrace) {
+      print(error);
+    });
+    return _handleRequest(response);
+  }
+
   Future logout() async {
     String token = await storage.read(key: 'token');
     Map<String, String> headers = {

@@ -1,7 +1,9 @@
 import 'dart:math' as math;
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:promociones/utils/options.dart' as prefix0;
@@ -13,6 +15,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:promociones/pages/promotions_page.dart';
 import 'package:promociones/utils/widgets/dialog_progress.dart';
+
+import '../utils/widgets/card_promotion.dart';
 
 class MapPage extends StatefulWidget {
   @override
@@ -44,6 +48,7 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
   AnimationController _controllerFloatBtn;
   bool doneRoute = false;
   String _mode = '';
+  String idStoreSelected = "";
 
   static const List<IconData> icons = const [
     Icons.directions_walk,
@@ -120,13 +125,14 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
     }
   }
 
-  _markerTapped(marker, latitude, longitude) {
+  _markerTapped(marker, latitude, longitude, idStore) {
     setState(() {
       doneRoute = false;
       _canDraw = true;
       markerTapped = marker;
       coordsMarkerSelected["latitude"] = latitude;
       coordsMarkerSelected["longitude"] = longitude;
+      idStoreSelected = idStore;
       _controllerFloatBtn.forward();
     });
   }
@@ -150,11 +156,12 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
             for (final i in data) {
               var latitude = double.parse(i["data_shopkeeper"]["latitude"]);
               var longitude = double.parse(i["data_shopkeeper"]["longitude"]);
+              var idStore = i['shopkeeper_id'];
               if (mounted) {
                 setState(() {
                   _markers.add(Marker(
                       consumeTapEvents: false,
-                      onTap: () => _markerTapped(i, latitude, longitude),
+                      onTap: () => _markerTapped(i, latitude, longitude, idStore),
                       markerId: MarkerId(i["key"]),
                       position: LatLng(latitude, longitude),
                       infoWindow: InfoWindow(
@@ -530,12 +537,205 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
       ),
       // bottomSheet: _canDraw && markerTapped != null ? _showBottomSheet() : Container(height: 0.0, width: 0.0,),
       floatingActionButton: _canDraw && markerTapped != null
-          ? _showFloatBtn()
+          ? Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: (){
+                  _promotionService.getPromotionsAcceptedFromStore(idStoreSelected).then((result){
+                    var i = result['data'] as List;
+                    showDialog(context: context, builder: (BuildContext context){
+                      return Container(
+                        height: 100,
+                        width: 200,
+                        child: AlertDialog(
+                          title: Text("Promociones activas en la tienda",
+                          textAlign: TextAlign.center),
+                          actions: [
+                            TextButton(onPressed: (){
+                              Navigator.pop(context);
+                            }, child: Container(
+                                decoration: BoxDecoration(
+                                  color: prefix0.primaryColor,
+                                  borderRadius: BorderRadius.circular(25)
+                                ),
+                                padding: EdgeInsets.all(10),
+                                child: Text("Ok", style: TextStyle(color: Colors.white),)),
+                            )
+                          ],
+                          content: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: Container(
+                              child: Column(
+                                children: [
+                                  ...i.map((e) {
+                                    String dateEnd = e["data_promotions"][0]["date_end"];
+                                    String endHour = e["data_promotions"][0]["end_hour"];
+                                    return Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: 110.0,
+                                              child: CachedNetworkImage(
+                                                fit: BoxFit.fill,
+                                                height: 105.0,
+                                                width: 100.0,
+                                                imageUrl: e["data_promotions"][0]["imageURL"],
+                                                placeholder: (context, url) => SpinKitThreeBounce(
+                                                  color: Color.fromRGBO(148, 3, 123, 1.0),
+                                                  size: 15.0,
+                                                ),
+                                                errorWidget: (context, url, error) => new Icon(Icons.error),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Container(
+                                                height: 105.0,
+                                                padding: EdgeInsets.all(10.0),
+                                                child: Column(
+                                                  children: <Widget>[
+                                                    Text(
+                                                      cutString(e["data_promotions"][0]["promotion_name"], 30),
+                                                      style: TextStyle(
+                                                          fontWeight: FontWeight.w600,
+                                                          fontFamily: 'Raleway',
+                                                          fontSize: 11.0),
+                                                      softWrap: true,
+                                                    ),
+                                                    Divider(
+                                                      color: Colors.grey,
+                                                    ),
+                                                    Expanded(
+                                                      child: Padding(
+                                                        padding: EdgeInsets.only(
+                                                            top: 2.0, left: 1.0, right: 1.0, bottom: 5.0),
+                                                        child: Text(
+                                                          cutString(e["data_promotions"][0]["description_promotion"], 80),
+                                                          style: TextStyle(fontSize: 9.0, color: Colors.grey),
+                                                          textAlign: TextAlign.center,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                      EdgeInsets.only(top: 8.0, left: 8.0, bottom: 0.0),
+                                                      child: Align(
+                                                        alignment: Alignment.centerLeft,
+                                                        child: Text(
+                                                          'Expira en $dateEnd a las $endHour',
+                                                          style: TextStyle(fontSize: 8.0),
+                                                          textAlign: TextAlign.start,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        )
+                                      ],
+                                    );
+                                  }),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    });
+                  });
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: prefix0.primaryColor,
+                    borderRadius: BorderRadius.circular(25)
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 6, horizontal: 13),
+                  child: Text('Ver promociones', style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),),
+                ),
+              ),
+              SizedBox(
+                width: 30,
+              ),
+              _showFloatBtn(),
+            ],
+          )
           : Container(
               height: 0.0,
               width: 0.0,
             ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+
     );
   }
+  String cutString(String str, int length) {
+    return (str != null && str.length > length
+        ? str.substring(0, length) + ' ...'
+        : str);
+  }
+
+  void _tappedPromotion(promotion) {
+    if (_promotionService.validatePromotion(promotion)) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => _promotionService.validateTypePromotion(promotion))
+      );
+    } else {
+      showDialog(
+          context: context,
+          // barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              titlePadding: EdgeInsets.all(20.0),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              title: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Icon(Icons.not_interested, size: 18.0,),
+                  ),
+                  Text('Promoción no disponible', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w700),),
+                ],
+              ),
+              content: RichText(
+                text: TextSpan(
+                    style: new TextStyle(
+                        fontSize: 13.0,
+                        color: Colors.black,
+                        fontFamily: 'Raleway'
+                    ),
+                    children: [
+                      TextSpan(text: 'Esta promoción inicia en el '),
+                      TextSpan(text: promotion["date_init"], style: TextStyle(fontWeight: FontWeight.w700, fontFamily: 'Raleway')),
+                      TextSpan(text: ' a las '),
+                      TextSpan(text: promotion["init_hour"], style: TextStyle(fontWeight: FontWeight.w700, fontFamily: 'Raleway')),
+                      TextSpan(text: ' y finalizará en el '),
+                      TextSpan(text: promotion["date_end"], style: TextStyle(fontWeight: FontWeight.w700, fontFamily: 'Raleway')),
+                      TextSpan(text: ' a las '),
+                      TextSpan(text: promotion["end_hour"], style: TextStyle(fontWeight: FontWeight.w700, fontFamily: 'Raleway')),
+                    ]
+                ),
+              ),
+
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('OK', style: TextStyle(color: primaryColor),),
+                )
+              ],
+            );
+          }
+      );
+    }
+  }
+
+
 }

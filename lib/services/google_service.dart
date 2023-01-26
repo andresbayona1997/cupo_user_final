@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import '../config.dart';
 import 'package:dio/dio.dart' as DIO;
 
@@ -17,8 +19,15 @@ class GoogleService {
     print(mode);
     String origin = '$originLat,$originLng';
     String destination = '${destinationLat.toString()},${destinationLng.toString()}';
-    Uri url = Uri.https('$urlDirections?origin=$origin&destination=$destination&mode=$mode', '&key=$apiKey');
-    print(url);
+    //Uri url = Uri.https('$urlDirections?origin=$origin&destination=$destination&mode=$mode', '&key=$apiKey');
+    //print(url);
+    Uri url ;
+    String googleUrl = 'https://www.google.com/maps/search/?api=1&query=$destinationLat,$destinationLng';
+    if (await launch(googleUrl)) {
+      await canLaunch(googleUrl);
+    } else {
+      throw 'Could not open the map.';
+    }
     return http.get(url)
     .then((http.Response response) {
       String res = response.body;

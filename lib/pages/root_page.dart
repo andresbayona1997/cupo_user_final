@@ -114,7 +114,7 @@ class RootPageState extends State<RootPage> {
 
   Future<void> _showNotification(Event event) async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'your channel id', 'your channel name', 'your channel description',
+        'your channel id', 'your channel name',
         importance: Importance.max, priority: Priority.high, ticker: 'ticker');
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(

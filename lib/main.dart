@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:promociones/app_config.dart';
 import 'package:promociones/pages/directions_page.dart';
 import 'package:promociones/pages/login_page.dart';
+import 'package:promociones/pages/recover_password_page.dart';
 import 'package:promociones/pages/register_page.dart';
 import 'package:promociones/pages/root_page.dart';
 import 'package:promociones/pages/my_profile_page.dart';
@@ -107,7 +108,8 @@ class MyApp extends StatelessWidget {
         '/reedemPromotions': (context) => ReedemedPromotionPage(),
         '/terms': (context) => TermsAndConditionsPage(),
         '/selectProducts': (context) => SelectProductsPage(),
-        '/directions': (context) => MyDirectionPage()
+        '/directions': (context) => MyDirectionPage(),
+        "/passRec":(BuildContext context) => RecoverPassword()
       },
     );
   }

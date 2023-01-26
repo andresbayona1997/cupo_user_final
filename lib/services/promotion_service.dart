@@ -270,6 +270,19 @@ class PromotionService {
     // Uri ur = new Uri.https(urlApp,url);
     // return await http.get(ur, headers: headers).then(_handleRequest);
   }
+  Future getPromotionsAcceptedFromStore(String idStore) async {
+    var token = await storage.read(key: 'token');
+    Map<String, String> headers = {
+      'Content-type': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+    final response = await dio.get('/get/promotions/this/accepted/$idStore',
+    options: DIO.Options(headers: headers)).onError(
+            (error, stackTrace) {
+          print(error);
+        });
+    return _handleRequest(response);
+  }
 
   Future acceptPromotion(String promotionCode, String uuid,
       List products) async {

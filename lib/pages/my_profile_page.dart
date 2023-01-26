@@ -110,7 +110,17 @@ class MyProfilePageState extends State<MyProfilePage> {
           Column(
             children: _buildTextFields(),
           ),
-          updateBtn()
+          updateBtn(),
+          TextButton(
+            onPressed: (){
+              Navigator.of(context).pushNamed('/passRec');
+            },
+            child: Text("Cambiar tu contraseña",
+              style: TextStyle(
+                  color: Color.fromRGBO(148, 3, 123, 1.0)
+              ),
+            ),
+          )
         ],
       ),
     );
